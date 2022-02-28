@@ -1,0 +1,15 @@
+{
+  "name": "localizations",
+  "version": "1.0.0",
+  "description": "",
+  "main": "copyLocalizations.js",
+  "scripts": {
+    "start": "node copyLocalizations.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "exceljs": "^4.3.0"
+  }
+}
