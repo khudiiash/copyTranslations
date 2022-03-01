@@ -13,36 +13,38 @@ wb.xlsx.readFile(fileName).then(recordKeys).catch(err => {
     console.log(err.message);
 });
 
-keysToCopy = [
-  'TIME_TXT',
-  'BONUS_WON'
+const keysToCopy = [
+  'RULES_PAGE_TXT_1_1'
 ]
 
+
 function recordKeys() {
-    const ws = wb.getWorksheet('All keys');
+    const ws = wb.getWorksheet('Лист1');
     const keysCol = ws.getColumn(1);
     const languagesRow =  ws.getRow(1);
     const langs = []
     const keys = {}
+    const allKeys = []
 
     languagesRow.eachCell(cell=> {
-      if (!cell.value || cell.value === 'Key') return;
+      if (!cell.value || cell.value === 'Keys') return;
       keys[cell.value] = {}
       langs.push(cell.value)
     })
 
     keysCol.eachCell((cell, r) => {
-      if (cell.value && keysToCopy.includes(cell.value)) {
+      if (/Keys/.test(cell.value)) return;
+
+      if (cell.value) {
         const languagesRow = ws.getRow(r);
         const key = cell.value;
-
-        keys[key] = {}
         languagesRow.eachCell((cell, c) => {
           if (c === 1 || !cell.value) return;
-          keys[langs[c - 3]][key] = cell.value;
+          keys[langs[c - 2]][key] = cell.value;
         })
       }
     }); 
+
     writeKeys(keys)
 }
 
