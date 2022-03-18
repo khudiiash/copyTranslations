@@ -4,7 +4,9 @@
   "description": "",
   "main": "copyLocalizations.js",
   "scripts": {
-    "start": "node copyLocalizations.js"
+    "copyAllFromTable": "node copyAllFromTable.js",
+    "copySomeFromTable": "node copySomeFromTable.js",
+    "copyFromGame": "node copyFromGame.js"
   },
   "keywords": [],
   "author": "",

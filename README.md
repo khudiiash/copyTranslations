@@ -2,20 +2,25 @@
 
 1. clone the project to the same folder where the root evoplay folder is.
 2. cd to project
+3. `npm install`
 
-if you need to copy some keys from the main table, switch to "main_table" branch
-- npm install
-- open copyLocalizations.js file
-- edit game name, and the keysToCopy array, these are the keys you would like copy from the table
+**Copying ALL keys from your own table**
+- replace the table in the root folder with your own
+- open `copyAllFromTable.js` file
+- edit `game`, `vendor`, and `pathToTable` (if needed) variables
 - save changes
-- npm start
+- run `npm run copyAllFromTable`
 
-if you need to copy all keys from your own table, stay on the "main" branch
-- npm install
-- open copyLocalizations.js file
-- edit game name
+**Copying some keys from the main table (containing all general keys)**
+- open `copySomeFromTable.js` file
+- edit `game`, `vendor`, `keysToCopy` variables
 - save changes
-- npm start
+- run `npm run copySomeFromTable`
 
+**Copying some keys from another game**
+- open `copyFromGame.js` file
+- edit `fromGame`, `fromVendor`, `toGame`, `toVendor`, `keysToCopy` variables
+- save changes
+- run `npm run copyFromGame`
 
-DONE
+Thank you!

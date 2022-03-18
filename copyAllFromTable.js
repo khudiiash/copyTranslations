@@ -4,27 +4,22 @@ const path = require('path');
 
 const wb = new ExcelJS.Workbook();
 
-const fileName = 'Localization.xlsx';
+const pathToYourTable = 'Localization.xlsx';
 const game = 'patricksmagicfield'
 const vendor = 'instant'
 const translationsPath = path.join(__dirname, `../evoplay/games/${vendor}/${game}/components/game/resources/translations/`)
 
-wb.xlsx.readFile(fileName).then(recordKeys).catch(err => {
+wb.xlsx.readFile(pathToYourTable).then(recordKeys).catch(err => {
     console.log(err.message);
 });
 
-const keysToCopy = [
-  'RULES_PAGE_TXT_1_1'
-]
-
 
 function recordKeys() {
-    const ws = wb.getWorksheet('Лист1');
+    const ws = wb.worksheets[0];
     const keysCol = ws.getColumn(1);
     const languagesRow =  ws.getRow(1);
     const langs = []
     const keys = {}
-    const allKeys = []
 
     languagesRow.eachCell(cell=> {
       if (!cell.value || cell.value === 'Keys') return;
