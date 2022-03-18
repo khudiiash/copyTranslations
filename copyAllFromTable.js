@@ -4,12 +4,12 @@ const path = require('path');
 
 const wb = new ExcelJS.Workbook();
 
-const pathToYourTable = 'Localization.xlsx';
+const pathToTable = 'Localization.xlsx';
 const game = 'patricksmagicfield'
 const vendor = 'instant'
 const translationsPath = path.join(__dirname, `../evoplay/games/${vendor}/${game}/components/game/resources/translations/`)
 
-wb.xlsx.readFile(pathToYourTable).then(recordKeys).catch(err => {
+wb.xlsx.readFile(pathToTable).then(recordKeys).catch(err => {
     console.log(err.message);
 });
 
