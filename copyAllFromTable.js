@@ -4,9 +4,10 @@ const path = require('path');
 
 const wb = new ExcelJS.Workbook();
 
-const pathToTable = 'Localization.xlsx';
-const game = 'patricksmagicfield'
+const pathToTable = 'Translations.xlsx';
+const game = 'pridefight'
 const vendor = 'instant'
+const sheetIndex = 2; // insert here the index of the needed sheet starting with 0
 const translationsPath = path.join(__dirname, `../evoplay/games/${vendor}/${game}/components/game/resources/translations/`)
 
 wb.xlsx.readFile(pathToTable).then(recordKeys).catch(err => {
@@ -15,30 +16,28 @@ wb.xlsx.readFile(pathToTable).then(recordKeys).catch(err => {
 
 
 function recordKeys() {
-    const ws = wb.worksheets[0];
-    const keysCol = ws.getColumn(1);
+    const ws = wb.worksheets[sheetIndex];
     const languagesRow =  ws.getRow(1);
-    const langs = []
     const keys = {}
-
-    languagesRow.eachCell(cell=> {
-      if (!cell.value || cell.value === 'Keys') return;
-      keys[cell.value] = {}
-      langs.push(cell.value)
+    
+    ws.eachRow((r, i) => {
+      if (!/[A-Z]+_[A-Z]+/.test(r.getCell(1).text)) return;
+      let key = '';
+      r.eachCell((cell, i) => {
+        if (i === 1) {
+          keys[cell.text] = {}
+          key = cell.text;
+        } 
+        else {
+          let text = cell.text;
+          if (typeof text === 'object') {
+            text = Object.values(cell.text)[0][0].text
+          }
+          const lang = languagesRow.getCell(i).text;
+          keys[key][lang] = text
+        }
+      })
     })
-
-    keysCol.eachCell((cell, r) => {
-      if (/Keys/.test(cell.value)) return;
-
-      if (cell.value) {
-        const languagesRow = ws.getRow(r);
-        const key = cell.value;
-        languagesRow.eachCell((cell, c) => {
-          if (c === 1 || !cell.value) return;
-          keys[langs[c - 2]][key] = cell.value;
-        })
-      }
-    }); 
 
     writeKeys(keys)
 }
@@ -46,21 +45,17 @@ function recordKeys() {
 function writeKeys(keys) {
   const trans_files = fs.readdirSync(translationsPath)
 
-  trans_files.forEach(fileName => {
-    const filePath = path.join(translationsPath, fileName);
-    fs.readFile(filePath, (err, data) => {
-      if (err) throw err;
-      
-      const lang = fileName.match(/_(\w+)\.json/)[1];
+  Object.entries(keys).forEach(([key, translations]) => {
+    for (const entry of Object.entries(translations)) {
+      const [lang, translation] = entry;
+      const fileName = trans_files.find(fileName => fileName.match(/_(\w+)\.json/)[1] === lang);
+      if (!fileName) return;
+      const filePath = path.join(translationsPath, fileName);
+      const data = fs.readFileSync(filePath);
       const object = JSON.parse(data, 'utf8');
-      if (lang in keys) {
-        Object.entries(keys[lang]).forEach(([key, value]) => {
-          object[key] = value;
-        })
-      }
-
-      fs.writeFileSync(filePath, JSON.stringify(object, '', 2));
-    });
+      object[key] = translation;
+      fs.writeFileSync(filePath, JSON.stringify(object, null, 2));
+    }
   })
   
 }

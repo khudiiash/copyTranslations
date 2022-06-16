@@ -5,7 +5,7 @@ const path = require('path');
 const wb = new ExcelJS.Workbook();
 
 const pathToTable = 'Localization.xlsx';
-const game = 'patricksmagicfield';    // set your game name
+const game = 'magicchests';    // set your game name
 const vendor = 'instant'; //  set the vendor
 
 const translationsPath = path.join(__dirname, `../evoplay/games/${vendor}/${game}/components/game/resources/translations/`)
@@ -16,6 +16,9 @@ wb.xlsx.readFile(pathToTable).then(recordKeys).catch(err => {
 
 const keysToCopy = [
   // add your keys
+  'GAME_VERSION_TXT',
+  'PLAY_TXT'
+
 ]
 
 function recordKeys() {
